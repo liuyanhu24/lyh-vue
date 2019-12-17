@@ -88,15 +88,32 @@
         </div>
       </a>
     </section>
+    <section class='profile_my_order border-1px' v-show="user._id">
+      <mt-button style="width:100%" type="danger" @click="logout">退出登录</mt-button>
+    </section>
   </section>
 </template>
 
 <script type="text/ecmascript-6">
   import {mapState} from 'vuex'
+  import {MessageBox} from 'mint-ui'
   export default {
    computed: {
       ...mapState(['user'])
-    }
+    },
+    methods: {
+      logout(){
+        MessageBox.confirm('你确定要退出吗').then(
+          ()=>{
+            this.$store.dispatch('logout')
+          },
+          ()=>{
+            
+          }
+        )
+        
+      }
+    },
   }
 </script>
 

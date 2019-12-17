@@ -54,13 +54,14 @@
               </section>
             </section>
           </div>
-          <button class="login_submit" @click.prevent="login">登录</button>
+          <button class="login_submit" @click.prevent="login">{{$t('login_login')}}</button>
         </form>
-        <a href="javascript:;" class="about_us">关于我们</a>
+        <a href="javascript:;" class="about_us">{{$t('login_aboutUs')}}</a>
       </div>
       <a href="javascript:" class="go_back" @click="$router.back()">
         <i class="iconfont icon-jiantou2"></i>
       </a>
+      <button @click="toggleLanguage">切换语言</button>
     </div>
   </section>
   
@@ -140,6 +141,11 @@ import { Toast, MessageBox } from 'mint-ui'
       },
       updateCaptcha () {
         this.$refs.captcha.src = 'http://localhost:4000/captcha?time=' + Date.now()
+      },
+      toggleLanguage(){
+        const locale = this.$i18n.locale==='en'?'zh_CN' :'en'
+        this.$i18n.locale =locale
+        localStorage.setItem('locale_key',locale)
       }
     }
   }

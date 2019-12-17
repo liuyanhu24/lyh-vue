@@ -2,8 +2,10 @@ import {
   reqAddress,
   reqCategorys,
   reqShops,
-  reqAutoLogin
-  
+  reqAutoLogin,
+  reqGoods,
+  reqRatings,
+  reqInfo
 } from '@/api'
 
 import {
@@ -13,7 +15,10 @@ import {
   RECEIVE_USER,
   RECEIVE_TOKEN,
   RESET_USER,
-  RESET_TOKEN
+  RESET_TOKEN,
+  RECEIVE_INFO,
+  RECEIVE_RATINGS,
+  RECEIVE_GOODS,
 
 } from './mutation-types'
 
@@ -64,5 +69,30 @@ export default {
     localStorage.removeItem('token_key')
     commit(RESET_USER)
     commit(RESET_TOKEN)
-  }
+  },
+  async getShopInfo({commit},cb){
+    const result =await reqInfo()
+    if (result.code===0) {
+      const info = result.data
+      commit(RECEIVE_INFO,{info})
+      typeof cd==='function' &&cb()
+    }
+  },
+  async getShopRatings({commit},cb){
+    const result = await reqRatings()
+    if (result.code===0) {
+      const ratings=result.data
+      commit(RECEIVE_RATINGS,{ratings})
+      typeof cb ==='function'&&cb()
+    }
+  },
+  async getShopGoods({commit}, cb) {
+    const result = await reqGoods()
+    if(result.code===0) {
+      const goods = result.data
+      commit(RECEIVE_GOODS, {goods})
+      // 如果组件中传递了接收消息的回调函数, 数据更新后, 调用回调通知调用的组件
+      typeof cb==='function' && cb()
+    }
+  },
 }
