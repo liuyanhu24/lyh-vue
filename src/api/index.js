@@ -17,6 +17,12 @@ export const reqShops = ({longitude, latitude}) => ajax('/shops', {
     needCheck: true
   }
 })
+export const reqSendCode = (phone) => ajax.get('/sendcode', {
+  // url: '/sendcode',
+  params: {
+    phone
+  }
+})
 
 //4.用户密码登录
 //export const reqPwdLogin = ({name, pwd, captcha}) => ajax.post('/login_pwd', {name, pwd, captcha})

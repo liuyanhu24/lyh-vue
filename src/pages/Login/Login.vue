@@ -67,6 +67,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import { Toast, MessageBox } from 'mint-ui'
   export default {
     name: 'Login',
     data () {

@@ -31,7 +31,7 @@ instance.interceptors.response.use(
   },
   error=>{
     Indicator.close()
-    const path = router.currentRoute.path
+    const response = error.response
     if (!response) {
       const path = router.currentRoute.path
       if (path!=='/login') {
