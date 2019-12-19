@@ -45,6 +45,7 @@ import {
         // 解决: 给响应式对象添加一个响应式属性  
         // Vue.set( target, key, value )
         Vue.set(food, 'count', 1)
+        state.cartFoods.push(food)
       }
     },
   
