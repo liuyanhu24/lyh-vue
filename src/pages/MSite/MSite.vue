@@ -11,7 +11,7 @@
     </Header>
     <!--首页导航-->
     <nav class="msite_nav">
-      <div class="swiper-container">
+      <div ref="sc1" class="swiper-container">
         <div class="swiper-wrapper">
           <div class="swiper-slide" v-for="(cs, index) in categorysArr2" :key="index">
             <div class="link_to_food" v-for="(c, index) in cs" :key="index">
@@ -100,7 +100,11 @@
   import {mapState} from 'vuex'
   export default {
     computed: {
-      ...mapState(['address', 'categorys', 'shops']),
+      ...mapState({
+         address: state => state.msite.address, // state是总状态, 函数的返回就是计算属性值
+        categorys: state => state.msite.categorys, 
+        shops: state => state.msite.shops, 
+      }),
       categorysArr(){
       const {categorys}=this
       const bigArr =[]
@@ -130,7 +134,10 @@
         }
       })
 
-    }
+    },
+    watch: {
+      
+    },
   }
 </script>
 

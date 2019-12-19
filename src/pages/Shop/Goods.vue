@@ -2,9 +2,10 @@
   <div>
     <div class="goods">
       <div class="menu-wrapper" ref="left">
-        <ul>
+        <ul ref="leftUl">
           <!-- current -->
-          <li class="menu-item" v-for="(good, index) in goods" :key="good.name" :class="{current: index===currentIndex}">
+          <li class="menu-item" v-for="(good, index) in goods" :key="good.name" 
+          :class="{current: index===currentIndex}" @click="clickItem(index)">
             <span class="text bottom-border-1px">
               <img class="icon" :src="good.icon" v-if="good.icon">
               {{good.name}}
@@ -17,7 +18,9 @@
           <li class="food-list-hook" v-for="(good, index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" :key="index">
+              <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" :key="index"
+              @click="showFood(food)"
+              >
                 <div class="icon">
                   <img width="57" height="57" :src="food.icon">
                 </div>
@@ -32,7 +35,7 @@
                     <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    CartControl组件
+                    <CartControl :food="food"/>
                   </div>
                 </div>
               </li>
@@ -40,43 +43,59 @@
           </li>
         </ul>
       </div>
+      <ShopCart/>
     </div>
+    <Food :food="food" ref="food"/>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
      import BScroll from 'better-scroll'
      import {mapState} from 'vuex'
+     import Food from '@/components/Food/Food'
+     import ShopCart from '@/components/ShopCart/ShopCart'
      export default{
        data() {
          return {
            scrollY:0,
-           tops:[]
+           tops:[],
+           food:{}
          }
        },
        computed: {
-         ...mapState(['goods']),
+         ...mapState({
+           goods:state=>state.shop.goods
+         }),
          currentIndex(){
           const {scrollY,tops} = this
-          return tops.findIndex((top,index)=>scrollY>=top && scrollY<tops[index+1])
+          const index= tops.findIndex((top,index)=>scrollY>=top && scrollY<tops[index+1])
+            if (index!==this.index&&this.leftScroll) {
+              this.index = index
+              const li = this.$refs.leftUl.children[index]
+              this.leftScroll.scrollToElement(li,300)
+            }
+            return index
           }
          },
          methods: {
-           initScroll(){
-             new BScroll(this.$refs.left,{})
-             const rightScroll = new BScroll(this.$refs.right,{
+           _initScroll(){
+             this.leftScroll = new BScroll(this.$refs.left,{
+               click:true,
+             })
+             this.rightScroll = new BScroll(this.$refs.right,{
+               click:true,
                probeType:1
              })
-             rightScroll.on('scroll',({x,y})=>{
+             this.rightScroll.on('scroll',({x,y})=>{
               console.log('scroll', x, y)
               this.scrollY = Math.abs(y)
              })
-             rightScroll.on('scrollEnd',({x,y})=>{
+             this.rightScroll.on('scrollEnd',({x,y})=>{
                console.log('scrollEnd', x, y)
                this.scrollY = Math.abs(y)
              })
            },
-           initTops () {
+        _initTops () {
         const tops = []
         let top = 0
         tops.push(top)
@@ -89,16 +108,29 @@
         // 更新tops数据
         this.tops = tops
         console.log('tops', tops)
+      },
+      clickItem(index){
+       const top = this.tops[index]
+       this.scrollY = top
+       this.rightScroll.scrollTo(0,-top,300)
+      },
+      showFood(food){
+        this.food = food
+        this.$refs.food.toggleShow()
       }
     },
 
     watch: {
       goods () { // goods数据有了
         this.$nextTick(() => {// 列表数据显示了
-          this.initScroll()
-          this.initTops()
+          this._initScroll()
+          this._initTops()
         })
       }
+    },
+    components:{
+      Food,
+      ShopCart
     }
   }
          
