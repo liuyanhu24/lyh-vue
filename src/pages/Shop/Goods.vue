@@ -64,7 +64,7 @@
        },
        computed: {
          ...mapState({
-           goods:state=>state.shop.goods
+           goods:state=>state.shop.shop.goods  ||[]
          }),
          currentIndex(){
           const {scrollY,tops} = this
@@ -79,7 +79,8 @@
          },
          methods: {
            _initScroll(){
-             this.leftScroll = new BScroll(this.$refs.left,{
+             if (!this.leftScroll) {
+              this.leftScroll = new BScroll(this.$refs.left,{
                click:true,
              })
              this.rightScroll = new BScroll(this.$refs.right,{
@@ -94,6 +95,11 @@
                console.log('scrollEnd', x, y)
                this.scrollY = Math.abs(y)
              })
+             }else{
+               this.leftScroll.refresh()
+               this.rightScroll.refresh()
+             }
+           
            },
         _initTops () {
         const tops = []
@@ -117,6 +123,12 @@
       showFood(food){
         this.food = food
         this.$refs.food.toggleShow()
+      }
+    },
+    mounted() {
+      if(this.goods.length>0){
+        this._initScroll()
+        this._initTops
       }
     },
 

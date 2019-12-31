@@ -71,5 +71,8 @@ export default{
       commit(RECEIVE_SHOPS, shops)
     }
   },
+  },
+  getters:{
+    
   }
  }

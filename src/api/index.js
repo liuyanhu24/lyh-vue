@@ -40,3 +40,7 @@ export const reqGoods = () => ajax('/goods')
 export const reqRatings = () => ajax('/ratings')
 // 获取info
 export const reqInfo = () => ajax('/info')
+export const reqShop = (id) => {
+  console.log(id)
+ return ajax('/shop/' + id)
+}

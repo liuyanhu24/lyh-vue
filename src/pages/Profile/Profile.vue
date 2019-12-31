@@ -99,9 +99,13 @@
   import {MessageBox} from 'mint-ui'
   export default {
    computed: {
-      ...mapState(['user'])
+      ...mapState({
+        user:state=>state.user.user
+      })
     },
+   
     methods: {
+     
       logout(){
         MessageBox.confirm('你确定要退出吗').then(
           ()=>{
